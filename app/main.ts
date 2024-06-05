@@ -6,7 +6,7 @@ const server = net.createServer((socket) => {
   socket.on("data", (data) => {
     console.log("received data", data.toString());
     const httpResponse = handleServerResponse(data, processArgs);
-    console.log("sent Data", httpResponse);
+    console.log("sent Data", httpResponse.replace(/\r\n/gi, "\\r\\n"));
     socket.write(httpResponse);
     // socket.end();
   });
