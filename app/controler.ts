@@ -26,11 +26,13 @@ export function handleServerResponse(
         const headerName = header.split(":")[0].toLocaleLowerCase();
         return headerName === HttpHeaderType.ACCEPT_ENCODING.toLowerCase();
       })[0];
-      const acceptEncoding =
-        AcceptEncodingHeader?.split(":")[1]?.trim() || null;
-      if (acceptEncoding && acceptEncoding !== "invalid-encoding") {
+      const acceptEncodingvalues =
+        AcceptEncodingHeader?.split(":")[1]
+          ?.split(",")
+          .map((value) => value?.trim()) || [];
+      if (acceptEncodingvalues.includes("gzip")) {
         httpResponseBuilder.setHeaders({
-          [HttpHeaderType.CONTENT_ENCODING]: acceptEncoding.toString(),
+          [HttpHeaderType.CONTENT_ENCODING]: "gzip",
         });
       }
 
