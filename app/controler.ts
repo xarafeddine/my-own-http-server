@@ -1,6 +1,6 @@
 import fs from "fs";
+import zlib from "zlib";
 import {
-  CRLF,
   ContentType,
   HttpHeaderType,
   HttpMethod,
@@ -53,7 +53,13 @@ export function handleServerResponse(
             [HttpHeaderType.CONTENT_TYPE]: ContentType.TEXT_PLAIN,
             [HttpHeaderType.CONTENT_LENGTH]: contentLength.toString(),
           });
-          httpResponseBuilder.setResponseBody(Buffer.from(content));
+          const buffer = Buffer.from(content, "utf8");
+          const response =
+            httpResponseBuilder.headers[HttpHeaderType.CONTENT_ENCODING] ===
+            "gzip"
+              ? zlib.gzipSync(buffer)
+              : buffer;
+          httpResponseBuilder.setResponseBody(response);
         }
       } else if (pathRoute === HttpHeaderType.USER_AGENT.toLowerCase()) {
         httpResponseBuilder.setStatusLine(
