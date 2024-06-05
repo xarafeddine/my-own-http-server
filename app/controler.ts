@@ -85,6 +85,11 @@ export function handleServerResponse(
             HttpStatusCode.NOT_FOUND
           );
         }
+      } else {
+        httpResponseBuilder.setStatusLine(
+          HttpVersion.HTTP_1_1,
+          HttpStatusCode.NOT_FOUND
+        );
       }
       break;
 
