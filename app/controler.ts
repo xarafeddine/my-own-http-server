@@ -69,7 +69,7 @@ export function handleServerResponse(
             );
 
             httpResponseBuilder.setHeaders({
-              [HttpHeaderType.CONTENT_TYPE]: ContentType.TEXT_PLAIN,
+              [HttpHeaderType.CONTENT_TYPE]: ContentType.OCTET_STREAM,
               [HttpHeaderType.CONTENT_LENGTH]: contents.length.toString(),
             });
             httpResponseBuilder.setResponseBody(contents);
