@@ -95,6 +95,7 @@ export function handleServerResponse(
 
     case HttpMethod.POST:
       if (pathRoute === "files" && content && processArgs?.directory) {
+        console.log("write to a file ++++++++++++++++++++++++++++++++++++");
         const directoryPath = processArgs?.directory;
         const filePath = `${directoryPath}/${content}`;
         try {

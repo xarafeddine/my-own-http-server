@@ -4,7 +4,7 @@ import { handleServerResponse } from "./controler";
 const processArgs = getProcessArgs();
 const server = net.createServer((socket) => {
   socket.on("data", (data) => {
-    console.log("received data: ", data.toString());
+    console.log("received data: ", data.toString().replace(/\r\n/gi, "\\r\\n"));
     const httpResponse = handleServerResponse(data, processArgs);
     console.log("sent data: ", httpResponse.replace(/\r\n/gi, "\\r\\n"));
     socket.write(httpResponse);
