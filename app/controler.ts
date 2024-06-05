@@ -54,11 +54,18 @@ export function handleServerResponse(
             [HttpHeaderType.CONTENT_LENGTH]: contentLength.toString(),
           });
           const buffer = Buffer.from(content, "utf8");
-          const response =
+          let response = buffer;
+          if (
             httpResponseBuilder.headers[HttpHeaderType.CONTENT_ENCODING] ===
             "gzip"
-              ? zlib.gzipSync(buffer)
-              : buffer;
+          ) {
+            const zipped = zlib.gzipSync(buffer);
+            httpResponseBuilder.setHeaders({
+              [HttpHeaderType.CONTENT_LENGTH]: zipped.length.toString(),
+            });
+            response = zipped;
+          }
+
           httpResponseBuilder.setResponseBody(response);
         }
       } else if (pathRoute === HttpHeaderType.USER_AGENT.toLowerCase()) {
@@ -115,7 +122,6 @@ export function handleServerResponse(
 
     case HttpMethod.POST:
       if (pathRoute === "files" && content && processArgs?.directory) {
-        console.log("write to a file ++++++++++++++++++++++++++++++++++++");
         const directoryPath = processArgs?.directory;
         const filePath = `${directoryPath}/${content}`;
         try {
