@@ -7,6 +7,7 @@ export enum HttpHeaderType {
   CONTENT_TYPE = "Content-Type",
   CONTENT_LENGTH = "Content-Length",
   CONTENT_ENCODING = "Content-Encoding",
+  ACCEPT_ENCODING = "Accept-Encoding",
   HOST = "Host",
   USER_AGENT = "User-Agent",
 }
@@ -28,30 +29,36 @@ export type HttpHeaders = Record<string, string>;
 
 export class HttpResponseBuilder {
   statusLine: string;
-  headers: string;
+  headers: Record<string, string>;
   responseBody: Buffer;
   httpResponse: string;
 
   constructor() {
     this.statusLine = "";
     this.responseBody = Buffer.from("");
-    this.headers = "";
+    this.headers = {};
     this.httpResponse = "";
   }
   buildHttpResponse() {
-    this.httpResponse = `${this.statusLine}\r\n${this.headers}\r\n${this.responseBody}`;
+    this.httpResponse = `${this.statusLine}\r\n${this.buildHeaders()}\r\n${
+      this.responseBody
+    }`;
     return this.httpResponse;
   }
   setStatusLine(httpVersion: HttpVersion, statusCode: HttpStatusCode) {
     this.statusLine = `${httpVersion} ${statusCode}`;
   }
   setHeaders(headers: HttpHeaders) {
-    this.headers =
-      Object.entries(headers)
-        .map(([key, value]) => `${key}: ${value}`)
-        .join(CRLF) + CRLF;
+    Object.assign(this.headers, headers);
   }
   setResponseBody(responseBody: Buffer) {
     this.responseBody = responseBody;
+  }
+  buildHeaders() {
+    return (
+      Object.entries(this.headers)
+        .map(([key, value]) => `${key}: ${value}`)
+        .join(CRLF) + CRLF
+    );
   }
 }

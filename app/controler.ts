@@ -22,14 +22,14 @@ export function handleServerResponse(
 
   switch (method) {
     case HttpMethod.GET:
-      const contentEncodingHeader = headers.filter((header) => {
+      const AcceptEncodingHeader = headers.filter((header) => {
         const headerName = header.split(":")[0].toLocaleLowerCase();
-        return headerName === HttpHeaderType.CONTENT_ENCODING.toLowerCase();
+        return headerName === HttpHeaderType.ACCEPT_ENCODING.toLowerCase();
       })[0];
-      const contentEncoding = contentEncodingHeader.split(":")[1].trim();
-      if (contentEncoding !== "invalid-encoding") {
+      const acceptEncoding = AcceptEncodingHeader.split(":")[1].trim();
+      if (acceptEncoding !== "invalid-encoding") {
         httpResponseBuilder.setHeaders({
-          [HttpHeaderType.CONTENT_ENCODING]: contentEncoding.toString(),
+          [HttpHeaderType.CONTENT_ENCODING]: acceptEncoding.toString(),
         });
       }
 
