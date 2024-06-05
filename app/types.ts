@@ -6,6 +6,7 @@ export enum HttpMethod {
 export enum HttpHeaderType {
   CONTENT_TYPE = "Content-Type",
   CONTENT_LENGTH = "Content-Length",
+  CONTENT_ENCODING = "Content-Encoding",
   HOST = "Host",
   USER_AGENT = "User-Agent",
 }

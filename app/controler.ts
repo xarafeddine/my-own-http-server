@@ -22,6 +22,17 @@ export function handleServerResponse(
 
   switch (method) {
     case HttpMethod.GET:
+      const contentEncodingHeader = headers.filter((header) => {
+        const headerName = header.split(":")[0].toLocaleLowerCase();
+        return headerName === HttpHeaderType.CONTENT_ENCODING.toLowerCase();
+      })[0];
+      const contentEncoding = contentEncodingHeader.split(":")[1].trim();
+      if (contentEncoding !== "invalid-encoding") {
+        httpResponseBuilder.setHeaders({
+          [HttpHeaderType.CONTENT_ENCODING]: contentEncoding.toString(),
+        });
+      }
+
       if (pathRoute === "") {
         httpResponseBuilder.setStatusLine(
           HttpVersion.HTTP_1_1,
