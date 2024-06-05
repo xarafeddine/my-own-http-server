@@ -1,5 +1,6 @@
 import fs from "fs";
 import zlib from "zlib";
+import net from "net";
 import {
   ContentType,
   HttpHeaderType,
@@ -11,7 +12,8 @@ import {
 
 export function handleServerResponse(
   data: Buffer,
-  processArgs: Record<string, string>
+  processArgs: Record<string, string>,
+  socket: net.Socket
 ) {
   const [requestLine, ...headers] = data.toString().split("\r\n");
   const [body] = headers.splice(headers.length - 1);
@@ -63,7 +65,9 @@ export function handleServerResponse(
             httpResponseBuilder.setHeaders({
               [HttpHeaderType.CONTENT_LENGTH]: zipped.length.toString(),
             });
-            response = zipped;
+            socket.write(httpResponseBuilder.buildHttpResponse());
+            socket.write(zipped);
+            return;
           }
 
           httpResponseBuilder.setResponseBody(response);
